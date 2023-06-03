@@ -19,9 +19,11 @@ app.use(express.json());
 app.use('/', homerouter)
 
 app.use('/pro',routes)
-app.use('/users',usersRoutes)
+app.use('/users', usersRoutes)
 
-
+app.use('*', (req,res)=>{
+    res.send('not found');
+})
 
 app.listen(PORT, ()=>{
     console.log('Express server listening on port')

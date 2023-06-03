@@ -29,7 +29,7 @@ const  userSchema = new mongoose.Schema({
         minlength:6,
         validate:{
             validator(value){
-                return value.toLowercase().includes('password');
+                return !value.toLowerCase().includes('password');
             },
             message: 'Please enter a valid  password'
         }
