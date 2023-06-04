@@ -1,6 +1,8 @@
 
 const User = require('../models/user')
 const {validationResult} = require('express-validator')
+const bcrypt = require('bcryptjs')
+
 
 const  addUserController = async (req,res)=>{
   const errors = validationResult(req)
@@ -24,10 +26,48 @@ const  addUserController = async (req,res)=>{
 
 
 
-const getUsersController =(req,res)=>{
- res.send('all users')
+const getUsersController = async (req,res)=>{
+  try{
+    const users = await User.find({} ,'-password')
+    res.status(200).send(users)
+  }catch(err){
+    res.status(500).send(err.message)
+  }
+ 
 }
+
+const getSingleUserController = async (req,res)=>{
+  const id = req.params.id
+  try{
+    const user = await User.findById(id ,'-password')
+    if(!user) return res.status(404).send('User not found')
+    res.send(user)
+  }catch(err){
+    res.status(500).send(err.message)
+  }
+  
+  
+}
+
+const loginUserController = async (req,res)=>{
+  const {email,password} = req.body
+  try{
+//chack email
+const user = await User.findOne({email, password})
+if(!user) return res.status(400).send('unable to find user')
+//chack password
+const isMatched = bcrypt.compare(password,user.password)
+if(!isMatched) return res.status(400).send('unable to match password')
+
+res.send('success')
+  }catch(err){
+    res.status(500).send(err.message)
+  } 
+}
+
 module.exports = {
     addUserController,
-    getUsersController
+    getUsersController,
+    getSingleUserController,
+    loginUserController
 }

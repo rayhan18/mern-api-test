@@ -2,7 +2,9 @@ const express = require('express');
 const {check} = require('express-validator');
 
 const router = express.Router();
-const {getUsersController,addUserController} = require('../controllers/userController')
+const {getUsersController,addUserController,getSingleUserController,
+    loginUserController
+} = require('../controllers/userController')
 
 router.get('/', getUsersController);
 
@@ -24,6 +26,11 @@ router.post('/',
     })
 ],
  addUserController)
+
+router.post('/login', loginUserController)
+router.get('/:id', getSingleUserController)
+
+
 
 
 
