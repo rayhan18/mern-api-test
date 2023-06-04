@@ -58,7 +58,18 @@ if(!user) return res.status(400).send('unable to find user')
 //chack password
 const isMatched = bcrypt.compare(password,user.password)
 if(!isMatched) return res.status(400).send('unable to match password')
-
+ // generate token
+ const token = user.generateToken()
+ //send as header  
+ res.header('X-Auth-Token', token)
+ //send as cookie
+//  res.cookie('auth-token', token,{
+//   httpOnly: true,
+//   sameSite: true,
+//   signed: true,
+//   maxAge: 4 * 60 * 60 * 1000
+//  })
+ // console.log(token)
 res.send('success')
   }catch(err){
     res.status(500).send(err.message)
